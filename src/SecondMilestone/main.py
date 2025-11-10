@@ -634,7 +634,7 @@ def evaluate_models(models, X_test, y_test, model_names):
 
 # 8. VISUALIZATION
 
-def plot_roc_curves(results, y_test):
+def plot_roc_curves(results, y_test, version):
     """Plot ROC curves for all models"""
     plt.figure(figsize=(10, 8))
     
@@ -651,11 +651,11 @@ def plot_roc_curves(results, y_test):
     plt.legend(loc="lower right", fontsize=10)
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig('roc_curves.png', dpi=300, bbox_inches='tight')
-    print("Saved ROC curves to 'roc_curves.png'")
+    plt.savefig(f'roc_curves_{version}.png', bbox_inches='tight')
+    print(f"Saved ROC curves to 'roc_curves_{version}.png'")
     plt.close()
 
-def plot_precision_recall_curves(results, y_test):
+def plot_precision_recall_curves(results, y_test, version):
     """Plot Precision-Recall curves for all models"""
     plt.figure(figsize=(10, 8))
     
@@ -671,11 +671,11 @@ def plot_precision_recall_curves(results, y_test):
     plt.legend(loc="lower left", fontsize=10)
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig('precision_recall_curves.png', dpi=300, bbox_inches='tight')
-    print("Saved Precision-Recall curves to 'precision_recall_curves.png'")
+    plt.savefig(f'precision_recall_curves_{version}.png', bbox_inches='tight')
+    print(f"Saved Precision-Recall curves to 'precision_recall_curves_{version}.png'")
     plt.close()
 
-def plot_feature_importance(rf_model, feature_names, top_n=15):
+def plot_feature_importance(rf_model, feature_names, version, top_n=15):
     """Plot feature importance from Random Forest"""
     importances = rf_model.feature_importances_
     indices = np.argsort(importances)[-top_n:]
@@ -684,13 +684,13 @@ def plot_feature_importance(rf_model, feature_names, top_n=15):
     plt.barh(range(len(indices)), importances[indices], align='center')
     plt.yticks(range(len(indices)), [feature_names[i] for i in indices])
     plt.xlabel('Feature Importance', fontsize=12)
-    plt.title('Top Feature Importances (Random Forest)', fontsize=14, fontweight='bold')
+    plt.title(f'Top Feature Importances (Random Forest) - {version.upper()}', fontsize=14, fontweight='bold')
     plt.tight_layout()
-    plt.savefig('feature_importance.png', dpi=300, bbox_inches='tight')
-    print("Saved feature importance plot to 'feature_importance.png'")
+    plt.savefig(f'feature_importance_{version}.png', bbox_inches='tight')
+    print(f"Saved feature importance plot to 'feature_importance_{version}.png'")
     plt.close()
 
-def plot_confusion_matrices(results, y_test):
+def plot_confusion_matrices(results, y_test, version):
     """Plot confusion matrices for all models"""
     fig, axes = plt.subplots(1, 3, figsize=(15, 4))
     
@@ -705,11 +705,11 @@ def plot_confusion_matrices(results, y_test):
         axes[idx].set_yticklabels(['Legitimate', 'Fraudulent'])
     
     plt.tight_layout()
-    plt.savefig('confusion_matrices.png', dpi=300, bbox_inches='tight')
-    print("Saved confusion matrices to 'confusion_matrices.png'")
+    plt.savefig(f'confusion_matrices_{version}.png', bbox_inches='tight')
+    print(f"Saved confusion matrices to 'confusion_matrices_{version}.png'")
     plt.close()
 
-def plot_model_comparison(results):
+def plot_model_comparison(results, version):
     """Plot bar chart comparing model metrics"""
     metrics = ['accuracy', 'precision', 'recall', 'f1', 'auc']
     model_names = list(results.keys())
@@ -733,8 +733,8 @@ def plot_model_comparison(results):
     ax.grid(True, alpha=0.3, axis='y')
     
     plt.tight_layout()
-    plt.savefig('model_comparison.png', dpi=300, bbox_inches='tight')
-    print("Saved model comparison to 'model_comparison.png'")
+    plt.savefig(f'model_comparison_{version}.png', bbox_inches='tight')
+    print(f"Saved model comparison to 'model_comparison_{version}.png'")
     plt.close()
 
 # 9. MAIN EXECUTION
@@ -777,11 +777,11 @@ def main(version='v1'):
     results = evaluate_models(models, X_test, y_test, model_names)
     
     # 9. Generate visualizations
-    plot_roc_curves(results, y_test)
-    plot_precision_recall_curves(results, y_test)
-    plot_feature_importance(rf_model, X.columns.tolist())
-    plot_confusion_matrices(results, y_test)
-    plot_model_comparison(results)
+    plot_roc_curves(results, y_test, version)
+    plot_precision_recall_curves(results, y_test, version)
+    plot_feature_importance(rf_model, X.columns.tolist(), version)
+    plot_confusion_matrices(results, y_test, version)
+    plot_model_comparison(results, version)
     
     print("\nGenerated files:")
     print("  - roc_curves.png")
