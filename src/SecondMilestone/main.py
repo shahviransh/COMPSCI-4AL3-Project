@@ -266,7 +266,8 @@ def preprocess_data(df, label_encoder=False):
         X['Customer Location'] = X['Customer Location'].map(location_means)
         
         print("Applied one-hot encoding and target encoding to categorical features")
-
+    
+    print(f"Total of {X.shape[1]} features will be used by the model")
     return X, y
 
 
@@ -751,32 +752,32 @@ def main(version='v1'):
     print(f"   V2: Small dataset (~23K rows) - Rapid prototyping")
     df = load_data_from_kaggle(version=version)
     
-    # 2. Exploratory data analysis
+    # Exploratory data analysis
     # df = exploratory_data_analysis(df)
     
-    # 3. Feature engineering
+    # 2. Feature engineering
     df = engineer_features(df)
     
-    # 4. Preprocess data
+    # 3. Preprocess data
     X, y, = preprocess_data(df, label_encoder=False)
     
-    # 5. Split and scale data
+    # 4. Split and scale data
     X_train, X_val, X_test, y_train, y_val, y_test, scaler = split_and_scale_data(X, y)
 
-    # 6. Apply SMOTE to training data
+    # 5. Apply SMOTE to training data
     X_train_balanced, y_train_balanced = apply_smote(X_train, y_train)
 
-    # 7. Train models
+    # 6. Train models
     lr_model = train_logistic_regression(X_train_balanced, y_train_balanced, X_val, y_val)
     rf_model = train_random_forest(X_train_balanced, y_train_balanced, X_val, y_val)
     nn_model = train_neural_network(X_train_balanced, y_train_balanced, X_val, y_val)
     
-    # 8. Evaluate models on test set
+    # 7. Evaluate models on test set
     models = [lr_model, rf_model, nn_model]
     model_names = ['Logistic Regression', 'Random Forest', 'Neural Network']
     results = evaluate_models(models, X_test, y_test, model_names)
     
-    # 9. Generate visualizations
+    # 8. Generate visualizations
     plot_roc_curves(results, y_test, version)
     plot_precision_recall_curves(results, y_test, version)
     plot_feature_importance(rf_model, X.columns.tolist(), version)
