@@ -172,28 +172,28 @@ def engineer_features(df):
     
     df = df.copy()
     
-    # 1. Total Customer Transactions
+    # Total Customer Transactions
     customer_transaction_counts = df.groupby('Customer ID')['Transaction ID'].nunique()
     df['Total Customer Transactions'] = df['Customer ID'].map(customer_transaction_counts)
     
-    # 2. Address Mismatch Flag
+    # Address Mismatch Flag
     df['Address Mismatch'] = (df['Shipping Address'] != df['Billing Address']).astype(int)
     
-    # 3. Time-Related Features Created from Transaction Date
+    # Time-Related (Temporal) Features Created from Transaction Date
     df['Transaction Date'] = pd.to_datetime(df['Transaction Date'])
     df['Day of Week'] = df['Transaction Date'].dt.dayofweek
     df['Month'] = df['Transaction Date'].dt.month
     df['Is Weekend'] = (df['Day of Week'] >= 5).astype(int)
     
-    # 4. New Account Flag
+    # New Account Flag
     df['New Account'] = (df['Account Age Days'] < 30).astype(int)
     
-    # 5. Transaction Amount Statistics per Customer
+    # Transaction Amount Statistics per Customer
     customer_stats = df.groupby('Customer ID')['Transaction Amount'].agg(['mean', 'std', 'max'])
     df['Avg Customer Transaction'] = df['Customer ID'].map(customer_stats['mean'])
     df['Transaction Amount Ratio'] = df['Transaction Amount'] / (df['Avg Customer Transaction'] + 1)
     
-    # 6. High Value Transaction Flag
+    # High Value Transaction Flag
     df['High Value Transaction'] = (df['Transaction Amount'] > df['Transaction Amount'].quantile(0.95)).astype(int)
     
     print(f"\nTotal of {df.shape[1]-1} features after engineering:\n{list(df.columns)}")
@@ -748,8 +748,8 @@ def main(version='v1'):
     
     # 1. Load data
     print(f"\nLoading dataset from Kaggle (Version: {version.upper()})")
-    print(f"   V1: Large dataset (~1.47M rows) - Full analysis")
-    print(f"   V2: Small dataset (~23K rows) - Rapid prototyping")
+    print("   V1: Large dataset (~1.47M rows)")
+    print("   V2: Small dataset (~23K rows)")
     df = load_data_from_kaggle(version=version)
     
     # Exploratory data analysis
