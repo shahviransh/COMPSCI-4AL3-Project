@@ -1,195 +1,192 @@
 \documentclass[11pt]{article}
 
-% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
-% Change to "preprint" to generate a non-anonymous version with page numbers.
 \usepackage[]{acl}
 \usepackage{times}
 \usepackage{latexsym}
-
-% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
 \usepackage[T1]{fontenc}
-% For Vietnamese characters
-% \usepackage[T5]{fontenc}
-% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
-
-% This assumes your files are encoded as UTF8
 \usepackage[utf8]{inputenc}
 \usepackage{microtype}
 \usepackage{inconsolata}
 \usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[colorinlistoftodos]{todonotes}
 
-% If the title and author information does not fit in the area allocated, uncomment the following
-%
-%\setlength\titlebox{<dim>}
-%
-% and set <dim> to something 5cm or larger.
+\title{Group 34 Progress Report:\\Fraud Detection in E-Commerce Transactions}
 
-\title{Group 34 Progress Report:\\My Group's Project Name}
-
-
-\author{First Author, Second Author, Third Author \\
-  \texttt{\{macid1,macid2,macid3\}@mcmaster.ca} }
-
-%\author{
-%  \textbf{First Author\textsuperscript{1}},
-%  \textbf{Second Author\textsuperscript{1,2}},
-%  \textbf{Third T. Author\textsuperscript{1}},
-%  \textbf{Fourth Author\textsuperscript{1}},
-%\\
-%  \textbf{Fifth Author\textsuperscript{1,2}},
-%  \textbf{Sixth Author\textsuperscript{1}},
-%  \textbf{Seventh Author\textsuperscript{1}},
-%  \textbf{Eighth Author \textsuperscript{1,2,3,4}},
-%\\
-%  \textbf{Ninth Author\textsuperscript{1}},
-%  \textbf{Tenth Author\textsuperscript{1}},
-%  \textbf{Eleventh E. Author\textsuperscript{1,2,3,4,5}},
-%  \textbf{Twelfth Author\textsuperscript{1}},
-%\\
-%  \textbf{Thirteenth Author\textsuperscript{3}},
-%  \textbf{Fourteenth F. Author\textsuperscript{2,4}},
-%  \textbf{Fifteenth Author\textsuperscript{1}},
-%  \textbf{Sixteenth Author\textsuperscript{1}},
-%\\
-%  \textbf{Seventeenth S. Author\textsuperscript{4,5}},
-%  \textbf{Eighteenth Author\textsuperscript{3,4}},
-%  \textbf{Nineteenth N. Author\textsuperscript{2,5}},
-%  \textbf{Twentieth Author\textsuperscript{1}}
-%\\
-%\\
-%  \textsuperscript{1}Affiliation 1,
-%  \textsuperscript{2}Affiliation 2,
-%  \textsuperscript{3}Affiliation 3,
-%  \textsuperscript{4}Affiliation 4,
-%  \textsuperscript{5}Affiliation 5
-%\\
-%  \small{
-%    \textbf{Correspondence:} \href{mailto:email@domain}{email@domain}
-%  }
-%}
+\author{Viransh Shah, Ellen Xiong \\
+  \texttt{\{shahv47,xionge1\}@mcmaster.ca} }
 
 \begin{document}
 \maketitle
-% \begin{abstract}
-% \end{abstract}
 
 \section{Introduction}
 
-Here, write a brief introduction to the problem you are solving. This can be adapted from your problem description and motivation from the original proposal. This should be around 0.25-0.5 pages.
+Financial fraud represents one of the most persistent and costly challenges facing e-commerce platforms today. With fraudulent transactions costing billions of dollars in losses annually, it also risks exposing customers to identity theft and financial harm. Our project addresses this critical problem by developing a machine learning-based fraud detection system for e-commerce transactions. The task is formulated as a binary classification problem where we predict whether a given transaction is fraudulent or legitimate based on multiple features.
+
+The challenge of fraud detection is multifaceted. Fraudulent transactions exhibit severe class imbalance, representing only approximately 5\% of transactions in our dataset and often less than 1\% in real-world scenarios. Fraudulent behavior emerges from complex feature interactions rather than single variable anomalies, requiring models that can capture complex relationships. It is also important to consider that fraud patterns constantly evolve as adversaries adapt their tactics, necessitating robust models that can generalize across different contexts. Our work aims to develop an effective fraud detection model that addresses these challenges, while maintaining high precision to minimize false positives that could frustrate legitimate customers.
 
 \section{Related Work}
 
-Here, talk about the related work you encountered for your approach. Cite at least 5 references. Refer to item 2. No one has done exactly your task? Write about the most similar thing you can find. This should be around 0.25-0.5 pages.
+Fraud detection in financial transactions has been extensively studied using various machine learning approaches. \cite{fraud-ml-review} provides a comprehensive review of machine learning techniques for credit card fraud detection, highlighting the effectiveness of ensemble methods and deep learning approaches in handling imbalanced datasets. \cite{fraud-big-data} examined fraud detection in the context of big data analytics, emphasizing the importance of feature engineering and real-time processing capabilities.
+
+Random forests and gradient boosting machines have shown particular success in fraud detection tasks due to their ability to handle non-linear relationships and feature interactions \citep{fraud-ensemble}. \cite{fraud-deep-learning} demonstrates that deep neural networks can automatically learn relevant features from transaction data, potentially outperforming traditional feature engineering approaches. Recent work by \cite{fraud-imbalance} specifically addresses the class imbalance problem through advanced sampling techniques and cost-sensitive learning methods, which directly inform our approach to handling the skewed distribution in our dataset.
 
 \section{Dataset}
 
-You should write about your dataset here, following the guidelines regarding item 1. This section may be 0.5-1 pages. Depending on your specific dataset, you may want to include subsections for the preprocessing, annotation, etc.
+We utilized the Fraudulent E-Commerce Transactions dataset from Kaggle, created by Shriyash Jagtap. This synthetic dataset simulates realistic e-commerce transaction patterns with engineered fraud scenarios. The dataset contains 1,472,952 transactions in version 1 and 23,634 transactions in version 2, with 16 original columns per transaction. Approximately 5\% of transactions are labeled as fraudulent, reflecting realistic fraud rates while providing sufficient positive examples for model training.
+
+\subsection{Dataset Features}
+
+The dataset includes both numerical and categorical features that capture different aspects of transaction behavior. Numerical features include Transaction Amount, Quantity, Customer Age, Account Age Days, and Transaction Hour. Categorical features comprise Payment Method (credit card, PayPal, debit card, etc.), Product Category (electronics, clothing, home goods, etc.), Customer Location, Device Used (mobile, desktop, tablet), and address information (IP Address, Shipping Address, Billing Address). Each transaction has a unique Transaction ID and Customer ID, along with a Transaction Date timestamp and the binary target label Is Fraudulent.
+
+\subsection{Data Preprocessing}
+
+Our preprocessing approach addressed both data quality and modeling requirements. For numerical features, we applied standardization to ensure all features contribute equally to distance-based calculations. We extracted temporal features using the Transaction Date feature, which created the features Day of Week, Month, and Is Weekend. Categorical variables were encoded using one-hot encoding for low-cardinality features (Payment Method, Product Category, Device Used) and target encoding for high-cardinality features (Customer Location).
+
+We engineered a new feature called Total Customer Transactions that counts the number of transactions per Customer ID, as repeat transaction patterns may indicate legitimate behavior while first-time transactions might warrant additional scrutiny. Address matching features were created to flag mismatches between shipping and billing addresses, as such discrepancies often signal fraud. We handled missing values through median for numerical features and mode for categorical features, though the synthetic dataset contained minimal missing data.
+
+To address the class imbalance problem, we implemented Synthetic Minority Over-sampling Technique (SMOTE, \cite{SMOTE}) to generate synthetic fraudulent examples in the training set, balancing the class distribution to improve model sensitivity to fraud patterns without simply duplicating existing minority class examples.
 
 \section{Features}
 
-Describe any features you used for your model, or how your data was input to your model. Are you doing feature engineering or feature selection? Are you learning embeddings? Is it all part of one neural network? Refer to item 2. This may range from 0.25 pages to 0.5 pages.
+Our final feature set consisted of 13 numerical features and 4 categorical features (expanded to multiple binary features through one-hot encoding). The numerical features included the original Transaction Amount, Quantity, Customer Age, Account Age Days, and Transaction Hour, as well as engineered features: Total Customer Transactions, Address Mismatch, Day of Week, Month, Is Weekend, New Account, Transaction Amount Ratio, and High Value Transaction. After one-hot encoding of the categorical features Payment Method, Product Category, and Device Used, the total feature dimensionality resulted in 23 features.
+
+Feature importance analysis from the Random Forest model revealed that Customer Location (target-encoded) was by far the most predictive feature, accounting for 24-90\% of feature importance depending on the dataset version. Transaction Hour showed consistent importance (2.5-15\%), which suggested temporal patterns in fraudulent behavior. Transaction Amount Ratio and Account Age Days also demonstrated high predictive power, confirming that unusual spending patterns and account age are strong fraud indicators.
+
+Some engineered features showed lower importance. High Value Transaction contributed less than 1\% importance, possibly because Transaction Amount Ratio already captures similar information more effectively. Address Mismatch also showed minimal importance, suggesting that in this dataset, fraudsters do not consistently use mismatched addresses. These findings will inform our feature refinements for the final model.
 
 \section{Implementation}
 
-Describe your model and implementation here. Refer to item 4. This may take around a page.
+We implemented three models to establish baselines and compare approaches: logistic regression, random forest, and a feedforward neural network.
+
+\subsection{Training Strategy}
+
+Our training strategy was to split the data using stratified sampling; 70\% training, 15\% validation, and 15\% test, while maintaining class distribution across splits (random seed 42). SMOTE was applied only to the training set, which created a balanced 50-50 class distribution. The validation set guided hyperparameter selection and early stopping, while the test set remained completely untouched until final evaluation.
+
+\subsection{Model Performance Comparison}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Model} & \textbf{Acc.} & \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} & \textbf{AUC} \\
+\midrule
+\multicolumn{6}{c}{\textit{Version 2 Dataset (23,634 rows)}} \\
+\midrule
+Logistic Reg. & 0.961 & 0.578 & 0.934 & 0.714 & 0.991 \\
+Random Forest & \textbf{0.976} & \textbf{0.720} & \textbf{0.885} & \textbf{0.794} & \textbf{0.993} \\
+Neural Network & 0.962 & 0.581 & 0.940 & 0.718 & 0.988 \\
+\midrule
+\multicolumn{6}{c}{\textit{Version 1 Dataset (1,472,952 rows)}} \\
+\midrule
+Logistic Reg. & 0.828 & 0.188 & 0.737 & 0.300 & 0.866 \\
+Random Forest & \textbf{0.902} & \textbf{0.273} & \textbf{0.570} & \textbf{0.369} & \textbf{0.866} \\
+Neural Network & 0.901 & 0.277 & 0.603 & 0.380 & 0.868 \\
+\bottomrule
+\end{tabular}
+\caption{Model Performance on Test Set for both Dataset Versions. Best performance in each category shown in bold.}
+\label{tab:results}
+\end{table}
+
+\subsection{Logistic Regression}
+
+Our logistic regression model used L2 regularization with class weights set to 'balanced' to address class imbalance. We performed hyperparameter tuning via 3-fold cross-validation with F1-score as the optimization metric. The best configuration used C=10 for v2 and C=0.1 for v1, with the liblinear solver optimized for binary classification and a log-loss (binary cross-entropy) objective function. Despite being a linear model, logistic regression achieved the highest recall on both datasets, making it a suitable model when minimizing false negatives is critical.
+
+\subsection{Random Forest}
+
+The random forest model demonstrated the best overall performance across both datasets. We used GPU-accelerated RAPIDS cuML Random Forest with 200 estimators and a maximum depth of 20. The model used Gini impurity as the splitting criterion and bootstrap sampling for tree diversity. This ensemble approach effectively captured non-linear feature interactions, as evidenced by its superior F1-scores (0.794 on v2, 0.369 on v1) compared to the linear baseline. The random forest model achieved the best balance between precision and recall, making it our primary model.
+
+\subsection{Neural Network}
+
+Our neural network used a GPU-accelerated PyTorch implementation with a two-hidden-layer architecture (128 and 64 neurons). We employed ReLU activation functions, dropout layers (rate 0.3) for regularization, and Adam optimizer (learning rate 0.001). The network used binary cross-entropy loss with the pos\_weight parameter to handle class imbalance. Training included early stopping with a patience of 5 epochs based on validation loss. The neural network achieved competitive performance with a high recall (0.940 on v2, 0.603 on v1) but struggled with precision, likely due to the model's capacity to memorize patterns in the minority class.
 
 \section{Results and Evaluation}
 
-How are you evaluating your model? What results do you have so far? What are your baselines? Refer to item 5. This may take around 0.5 pages.
+\subsection{Evaluation Metrics}
+
+Given the class imbalance and business context of fraud detection, we evaluated models using multiple metrics beyond simple accuracy. Precision measures the proportion of fraud predictions that are correct, minimizing false positives that frustrate legitimate customers. Recall measures the proportion of actual frauds detected, minimizing false negatives that result in financial losses. F1-score provides a balanced metric combining precision and recall, serving as our primary optimization target. AUC-ROC measures the model's ability to distinguish between classes across all classification thresholds, providing threshold-independent performance assessment.
+
+\subsection{Performance Analysis}
+
+Table~\ref{tab:results} presents comprehensive results for both dataset versions. The Random Forest model consistently achieved the best F1-scores: 0.794 on v2 and 0.369 on v1. However, performance degraded significantly for all models on the larger v1 dataset, suggesting that our models struggled to generalize to the increased data complexity and diversity.
+
+On the smaller v2 dataset, all models achieved excellent AUC-ROC scores (>0.98), indicating strong discriminative ability. Logistic Regression and Neural Network showed near-identical performance with high recall (>0.93) but lower precision (~0.58), which resulted in many false alarms. Random Forest achieved a better balance with 72\% precision and 89\% recall, making it more practical for deployment.
+
+On the larger v1 dataset, performance dropped substantially. Random Forest maintained the best F1-score (0.369) but precision fell to 27\%, meaning only 1 in 4 fraud predictions were correct. Recall dropped to 57\%, missing 43\% of frauds. This performance degradation suggests that the v1 dataset contains more complex fraud patterns or greater feature variation that our current models cannot adequately capture.
+
+\subsection{Visualizations}
+
+Please refer to Figure~\ref{fig:fig1}, Figure~\ref{fig:fig2}, Figure~\ref{fig:fig3} and Figure~\ref{fig:fig4} below. Additional figures showing feature importance, model comparision and precision recall curve will be submitted alongside the Progress Report.
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}{\textwidth}
+    \includegraphics[width=0.5\textwidth, height=0.5\textheight, keepaspectratio]{../../src/SecondMilestone/roc_curves_v2.png}
+    \caption{Version 2 (23K rows)}
+    \label{fig:fig1}
+\end{subfigure}
+\hfill
+\begin{subfigure}{\textwidth}
+    \includegraphics[width=0.5\textwidth, height=0.5\textheight, keepaspectratio]{../../src/SecondMilestone/roc_curves_v1.png}
+    \caption{Version 1 (1.47M rows)}
+    \label{fig:fig2}
+\end{subfigure}
+\end{figure}
+\begin{figure}[h]
+\centering
+\begin{subfigure}{\textwidth}
+    \includegraphics[width=0.5\textwidth, height=0.5\textheight, keepaspectratio]{../..src/SecondMilestone/confusion_matrices_v2.png}
+    \caption{Version 2 (23K rows)}
+        \label{fig:fig3}
+\end{subfigure}
+\hfill
+\begin{subfigure}{\textwidth}
+    \includegraphics[width=0.5\textwidth, height=0.5\textheight, keepaspectratio]{../../src/SecondMilestone/confusion_matrices_v1.png}
+    \caption{Version 1 (1.47M rows)}
+        \label{fig:fig4}
+\end{subfigure}
+\end{figure}
 
 \section{Feedback and Plans}
 
-Write about your plans for the remainder of the project. This should include a discussion of the feedback you received from your TA, and how you plan to improve your approach. Reflect on your implementation and areas for improvement. Refer to item 6. This may be around 0.5 pages.
+\subsection{TA Feedback}
 
-\section{Template Notes}
+During our TA consultation, we received guidance on addressing our model's limitations:
 
-You can remove this section or comment it out, as it only contains instructions for how to use this template. You may use subsections in your document as you find appropriate.
+\textbf{Class Imbalance:} While SMOTE improved results, the TA noted that class imbalance is not perfectly fixed. We were advised to try downsampling the majority class (legitimate transactions) or explore alternative oversampling techniques. The current 50-50 balance may be too aggressive; experimenting with 60-40 or 70-30 ratios might improve precision without sacrificing too much recall.
 
-\subsection{Tables and figures}
+\textbf{Model Learning Capacity:} The TA suggested creating a model that can actually learn the data, even if overfitted initially. Our v1 results suggest we may have the opposite problem, underfitting. We should experiment with more complex models (deeper neural networks, more Random Forest trees) and verify if they can achieve higher training accuracy (85\%+) before worrying about generalization.
 
-See Table~\ref{citation-guide} for an example of a table and its caption.
-See Figure~\ref{fig:experiments} for an example of a figure and its caption.
+\textbf{Cross-Validation:} We were advised to try different data split seeds or implement proper cross-validation. Our current fixed seed (42) may result in a particularly easy or difficult test set. Looking at the K-fold cross-validation would provide more robust performance estimates and reveal whether our results are consistent or highly dependent on the specific train-test split.
 
+\textbf{Overfitting Management:} If training performance is strong (85\%+ accuracy) but test performance is poor, the TA recommended reducing model complexity. This would involve fewer layers in the neural network, shallower Random Forest trees, or stronger regularization in Logistic Regression.
 
-\begin{figure}[t]
-  \includegraphics[width=\columnwidth]{example-image-golden}
-  \caption{A figure with a caption that runs for more than one line.
-    Example image is usually available through the \texttt{mwe} package
-    without even mentioning it in the preamble.}
-  \label{fig:experiments}
-\end{figure}
+\subsection{Future Improvements}
 
-\begin{figure*}[t]
-  \includegraphics[width=0.48\linewidth]{example-image-a} \hfill
-  \includegraphics[width=0.48\linewidth]{example-image-b}
-  \caption {A minimal working example to demonstrate how to place
-    two images side-by-side.}
-\end{figure*}
+Based on TA feedback and our analysis, we have identified specific improvements for the final model:
 
+\textbf{Resampling Techniques:} Implement multiple strategies: (1) random undersampling of legitimate transactions to create 70-30 class distributions, (2) ADASYN \cite{ADASYN} instead of SMOTE for more adaptive synthetic sample generation, (3) hybrid approaches combining oversampling and undersampling. Then compare results across different class balance ratios.
 
-\subsection{Citations}
+\textbf{Model Complexity Tuning:} For the v1 dataset, increase model capacity systematically. Train Random Forest with 500-1000 trees and deeper maximum depth (30-40). Expand neural network to 3-4 hidden layers with 256-128-64-32 neurons. Monitor training vs. validation accuracy to identify the optimal complexity point where the model learns patterns without overfitting.
 
-\begin{table*}
-  \centering
-  \begin{tabular}{lll}
-    \hline
-    \textbf{Output}           & \textbf{natbib command} & \textbf{ACL only command} \\
-    \hline
-    \citep{Gusfield:97}       & \verb|\citep|           &                           \\
-    \citealp{Gusfield:97}     & \verb|\citealp|         &                           \\
-    \citet{Gusfield:97}       & \verb|\citet|           &                           \\
-    \citeyearpar{Gusfield:97} & \verb|\citeyearpar|     &                           \\
-    \citeposs{Gusfield:97}    &                         & \verb|\citeposs|          \\
-    \hline
-  \end{tabular}
-  \caption{\label{citation-guide}
-    Citation commands supported by the style file.
-  }
-\end{table*}
+\textbf{Cross-Validation:} Implement 5-fold stratified cross-validation for all models. Report mean and standard deviation of all metrics across folds. Test multiple random seeds (42, 123, 456, 789, 1000) to assess result stability. 
 
-Table~\ref{citation-guide} shows the syntax supported by the style files.
-We encourage you to use the natbib styles.
-You can use the command \verb|\citet| (cite in text) to get ``author (year)'' citations, like this citation to a paper by \citet{Gusfield:97}.
-You can use the command \verb|\citep| (cite in parentheses) to get ``(author, year)'' citations \citep{Gusfield:97}.
-You can use the command \verb|\citealp| (alternative cite without parentheses) to get ``author, year'' citations, which is useful for using citations within parentheses (e.g. \citealp{Gusfield:97}).
+\textbf{Feature Engineering Refinement:} Investigate the Customer Location feature, check whether it represents genuine patterns or data leakage. Remove or modify highly predictive features temporarily to ensure other features are being used. Engineer additional behavioral features: transaction velocity (transactions per day), time since last transaction, average transaction amount changes over time, and product category diversity.
 
-\subsection{References}
+\textbf{Cost-Sensitive Learning:} Implement explicit class weights beyond balanced mode. Assign 10:1 cost ratio for false negatives vs. false positives to reflect reality that missing frauds is more costly than false alarms. Optimize threshold selection on validation set for maximum F1 or F2 score (emphasizing recall).
 
-\nocite{Ando2005,andrew2007scalable,rasooli-tetrault-2015}
+\textbf{Advanced Techniques:} Explore XGBoost with GPU acceleration for potentially better performance than Random Forest. Implement ensemble methods: stack predictions from multiple models using a meta-learner. Adapt the interpretability of the model using SHAP \cite{SHAP} values to understand which features drive individual predictions.
 
-Many websites where you can find academic papers also allow you to export a bib file for citation or bib formatted entry. Copy this into the \texttt{custom.bib} and you will be able to cite the paper in the \LaTeX{}. You can remove the example entries.
+\section{Team Contributions}
 
-\subsection{Equations}
+Viransh did the data preprocessing and feature engineering efforts; implemented the data cleaning pipeline, SMOTE oversampling, and created engineered features including Total Customer Transactions, Address Mismatch, and Transaction Amount Ratio. Viransh also implemented GPU acceleration across all models using PyTorch for Neural Networks and RAPIDS cuML for Random Forest, significantly reducing training time. Additionally, Viransh coded the Logistic Regression model.
 
-An example equation is shown below:
-\begin{equation}
-  \label{eq:example}
-  A = \pi r^2
-\end{equation}
+Ellen focused on model implementation and evaluation, coding the Random Forest and Neural Network models with appropriate architectures and training strategies. Ellen implemented the evaluation framework with multiple metrics (precision, recall, F1, AUC-ROC), generated all visualizations (ROC curves, feature importance plots, confusion matrices), and conducted the analysis comparing performance across dataset versions.
 
-Labels for equation numbers, sections, subsections, figures and tables
-are all defined with the \verb|\label{label}| command and cross references
-to them are made with the \verb|\ref{label}| command.
-This an example cross-reference to Equation~\ref{eq:example}. You can also write equations inline, like this: $A=\pi r^2$.
+Both team members collaborated on code review and report/code writing.
 
-
-% \section*{Limitations}
-
-\section*{Team Contributions}
-
-Write in this section a few sentences describing the contributions of each team member. What did each member work on? Refer to item 7.
-
-% Bibliography entries for the entire Anthology, followed by custom entries
-%\bibliography{custom,anthology-overleaf-1,anthology-overleaf-2}
-
-% Custom bibliography entries only
+\bibliographystyle{acl_natbib}
 \bibliography{custom}
-
-% \appendix
-
-% \section{Example Appendix}
-% \label{sec:appendix}
-
-% This is an appendix.
 
 \end{document}
