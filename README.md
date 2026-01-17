@@ -22,6 +22,13 @@ This project develops a binary classification system to detect fraudulent e-comm
 - **XGBoost**: Gradient boosting with GPU support (66.4% precision, 24.3% recall)
 - **Weighted Ensemble**: 70-30 recall-precision combination (26.3% precision, 61.3% recall)
 
+### Pretrained Models
+
+All trained models and ensemble artifacts for this project are available on Hugging Face:
+- https://huggingface.co/shahviransh/fraud-detection
+
+This repository provides ready-to-use checkpoints for fraud detection in e-commerce transactions using multiple machine learning models and a weighted ensemble.
+
 ## Repository Structure
 
 ```
